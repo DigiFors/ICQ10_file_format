@@ -166,4 +166,4 @@ Offset | Length | Information
 0x10   | 4      | always 0x04
 0x14   | 4      | unknown
 
-I hope this document is useful. Contact us at info@digifors.de if you have any comments, questions or corrections.
+We hope this document is useful. Contact us at info@digifors.de if you have any comments, questions or corrections.
