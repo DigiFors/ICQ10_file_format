@@ -25,9 +25,12 @@ All files contain blocks. A block may be the entire user info or a message in a 
 Blocks start and end with their length (excluding the length values), as four-byte little-endian integer, written twice.
 
 For instance, a block might look like this:
-10 00 00 00 10 00 00 00 <- length, written twice
-00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f <- block data
-10 00 00 00 10 00 00 00 <- length, written twice
+
+`10 00 00 00 10 00 00 00` <- length, written twice
+
+`00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f` <- block data
+
+`10 00 00 00 10 00 00 00` <- length, written twice
 
 All values are little-endian.
 
