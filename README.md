@@ -82,8 +82,9 @@ Offset | Length | Information
 0x40   | 4      | length of the GUID = len_guid
 0x44   | len_guid | GUID. 8-4-4-4, allowed characters are 0-9 and a-f.
 0x44+len_guid | 4 | 0x0e if there is a name, or 0x15 otherwise
-0x44+len_guid+0x04 | 4 | always 0x00 (probably the second GUID length = 0, since there is no second GUID)
-0x44+len_guid+0x08 | 4 | 0x15 if there is a name, or 0x05 otherwise
+0x44+len_guid+0x04 | 4 | length of second GUID (can be 0) = len_guid_2
+0x44+len_guid+0x08 | len_guid_2 | second GUID
+0x4c+len_guid+0x08+len_guid_2 | 4 | 0x15 if there is a name, or 0x05 otherwise
 
 Outgoing message or file only:
 
@@ -94,7 +95,7 @@ Offset | Length | Information
 0x48   | 4      | length of the GUID = len_guid
 0x4c   | len_guid | GUID. 8-4-4-4-ID, allowed characters are 0-9 and a-f. ID is a counter that starts at 1.
 0x4c+len_guid | 4 | 0x0e if there is a name, or 0x15 otherwise
-0x44+len_guid+0x04 | 4 | length of second GUID (for outgoing files, otherwise 0) = len_guid_2
+0x44+len_guid+0x04 | 4 | length of second GUID (can be 0) = len_guid_2
 0x44+len_guid+0x08 | len_guid_2 | second GUID
 0x4c+len_guid+0x08+len_guid_2 | 4 | 0x15 if there is a name, or 0x05 otherwise
 
@@ -124,7 +125,7 @@ Offset | Length | Information
 
 ## Files
 
-Files have an URL starting with https://files.icq.net/get/ as the message. If the file is outgoing, it has a second GUID as described above, and the message is followed by the four-byte integers 0x10, 0x43, 0x12 and then again message length and message.
+Files have an URL starting with https://files.icq.net/get/ as the message. Some files have a second GUID as described above, and the message is followed by the four-byte integers 0x10, 0x43, 0x12 and then again message length and message.
 
 ## Added/removed contacts
 
@@ -132,12 +133,12 @@ For this, the message is always "added you to contacts" or similar in the langua
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | always 0x16
-0x04   | 4      | always 0x31
-0x08   | 4      | always 0x17
-0x0c   | 4      | always 0x04
+0x00   | 4      | unknown
+0x04   | 4      | unknown
+0x08   | 4      | unknown
+0x0c   | 4      | unknown
 0x10   | 4      | always 0x02
-0x14   | 4      | always 0x2b
+0x14   | 4      | unknown
 0x18   | 4      | length of ICQ number = len_icq
 0x1c   | len_icq | ICQ number as ASCII string
 0x1c+len_icq | 4 | unknown
@@ -152,41 +153,41 @@ The start call message has an empty message body with some special fields after 
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | always 0x09
+0x00   | 4      | unknown
 0x04   | 4      | unknown
-0x08   | 4      | always 0x1b
-0x0c   | 4      | always 0x04
+0x08   | 4      | unknown
+0x0c   | 4      | unknown
 0x10   | 4      | always 0x04
-0x14   | 4      | always 0x1d
+0x14   | 4      | unknown
 
 Fields from 0x18 are as in the add contact message. If it was an incoming call, there are some extra fields after the field that contains either the name or the ICQ number:
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | always 0x1f
-0x04   | 4      | always 0x04
-0x08   | 4      | always 0x01
+0x00   | 4      | unknown
+0x04   | 4      | unknown
+0x08   | 4      | unknown
 
 The end call message is very similar, here are the fields after the message:
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | always 0x09
+0x00   | 4      | unknown
 0x04   | 4      | unknown
-0x08   | 4      | always 0x1b
-0x0c   | 4      | always 0x04
+0x08   | 4      | unknown
+0x0c   | 4      | unknown
 0x10   | 4      | always 0x03
-0x14   | 4      | always 0x1d
+0x14   | 4      | unknown
 
 If the call was completed (i.e. not no answer), there are some extra fields after the field that contains either the name or the ICQ number:
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | always 0x1e
-0x04   | 4      | always 0x04
-0x08   | 4      | always 0x12
+0x00   | 4      | unknown
+0x04   | 4      | unknown
+0x08   | 4      | unknown
 0x0c   | 4      | unknown
-0x10   | 4      | always 0x04
+0x10   | 4      | unknown
 0x14   | 4      | unknown
 
 We hope this document is useful. Contact us at info@digifors.de if you have any comments, questions or corrections.
