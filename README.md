@@ -13,7 +13,7 @@ On Windows, the ICQ directory can be found under %AppData%\Roaming\ICQ. The ICQ 
 - `\dialogs` contains a file called cache2 which is again a JSON file with chat partners.
 - `\info` has a file called cache which stores some basic info about the user the profile belongs to.
 - `\key` contains files called fetch and value.au. I have not yet been able to determine what they're used for.
-- `\stickers` has images.
+- `\stickers` has ICQ images ("stickers").
 
 # Binary files
 
@@ -76,9 +76,9 @@ Offset | Length | Information
 0x3c   | 4      | always 0x04
 0x40   | 4      | length of the GUID = len_guid
 0x44   | len_guid | GUID. 8-4-4-4 if incoming message or file, 8-4-4-4-ID if outgoing message or file. Allowed characters are 0-9 and a-f. ID is a counter that starts at 1. GUID is empty if it's anything else.
-0x44+len_guid | 4 | 0x0e if incoming, 0x15 if outgoing
+0x44+len_guid | 4 | 0x0e or 0x15 *
 0x44+len_guid+0x04 | 4 | 0x00
-0x44+len_guid+0x08 | 4 | 0x15 if incoming, 0x05 if outgoing
+0x44+len_guid+0x08 | 4 | if field * is 0x0e, then 0x15, otherwise 0x05
 
 Incoming message only:
 
