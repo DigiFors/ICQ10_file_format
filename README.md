@@ -191,3 +191,7 @@ Offset | Length | Information
 0x14   | 4      | unknown
 
 We hope this document is useful. Contact us at info@digifors.de if you have any comments, questions or corrections.
+
+# An implementation
+
+The file icq.py contains a small, MIT-licensed Python script which converts ICQ profile folders into SQLite databases for easy reading.
