@@ -47,7 +47,7 @@ Start integer | Data
 3 | User name
 4 | Status
 5 | Type of account (ICQ/AIM)
-6 | Phone number (with country prefix, without +)
+6 | Phone number written as ASCII string (with country prefix, without +)
 7 | Unknown
 
 # _db2 files
