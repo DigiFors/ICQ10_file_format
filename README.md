@@ -38,7 +38,7 @@ All values are little-endian.
 
 Everything in this file is contained in a block.
 
-The block contains several pieces. All pieces start with a four-byte integer, followed by the length of the data, followed by the data.
+The block contains several pieces. All pieces start with a four-byte integer, followed by the length of the data (again as a four-byte integer), followed by the data.
 
 Start integer | Data
 ------------- | ----
