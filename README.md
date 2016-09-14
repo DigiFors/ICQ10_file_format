@@ -64,7 +64,7 @@ Offset | Length | Information
 0x0c   | 4      | UNIX timestamp of the message as reported by the server
 0x10   | 4      | always 0x0d
 0x14   | 4      | always 0x08
-0x18   | 4      | if first message: 0xffffffff, otherwise: 0x??030000
+0x18   | 4      | if first message: 0xffffffff, otherwise: unknown
 0x1c   | 4      | if first message: 0xffffffff, otherwise: server timestamp of the last message
 0x20   | 4      | always 0x02
 0x24   | 4      | always 0x04
@@ -74,38 +74,61 @@ Offset | Length | Information
 0x34   | 4      | UNIX timestamp of the message as reported by the client
 0x38   | 4      | always 0x00
 0x3c   | 4      | always 0x04
-0x40   | 4      | length of the GUID = len_guid
-0x44   | len_guid | GUID. 8-4-4-4 if incoming message or file, 8-4-4-4-ID if outgoing message or file. Allowed characters are 0-9 and a-f. ID is a counter that starts at 1. GUID is empty if it's anything else.
-0x44+len_guid | 4 | 0x0e or 0x15 *
-0x44+len_guid+0x04 | 4 | 0x00
-0x44+len_guid+0x08 | 4 | if field * is 0x0e, then 0x15, otherwise 0x05
 
-Incoming message only:
+Incoming message or file only:
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x44+len_guid+0x0c | 4 | length of name = len_name
-0x44+len_guid+0x10 | len_name | name
+0x40   | 4      | length of the GUID = len_guid
+0x44   | len_guid | GUID. 8-4-4-4, allowed characters are 0-9 and a-f.
+0x44+len_guid | 4 | 0x0e if there is a name, or 0x15 otherwise
+0x44+len_guid+0x04 | 4 | always 0x00 (probably the second GUID length = 0, since there is no second GUID)
+0x44+len_guid+0x08 | 4 | 0x15 if there is a name, or 0x05 otherwise
+
+Outgoing message or file only:
+
+Offset | Length | Information
+------ | ------ | -----------
+0x40   | 4      | always 0x00
+0x44   | 4      | always 0x0e
+0x48   | 4      | length of the GUID = len_guid
+0x4c   | len_guid | GUID. 8-4-4-4-ID, allowed characters are 0-9 and a-f. ID is a counter that starts at 1.
+0x4c+len_guid | 4 | 0x0e if there is a name, or 0x15 otherwise
+0x44+len_guid+0x04 | 4 | length of second GUID (for outgoing files, otherwise 0) = len_guid_2
+0x44+len_guid+0x08 | len_guid_2 | second GUID
+0x4c+len_guid+0x08+len_guid_2 | 4 | 0x15 if there is a name, or 0x05 otherwise
+
+Other records:
+
+Offset | Length | Information
+------ | ------ | -----------
+0x48   | 4      | always 0x00 (probably the GUID length = 0, since there is no GUID)
+0x4c   | 4      | 0x0e if there is a name, or 0x15 otherwise
+0x50   | 4      | 0x00 (probably the second GUID length = 0, since there is no second GUID)
+0x54   | 4      | 0x15 if there is a name, or 0x05 otherwise
+
+If there is a name (continued with resetted offset):
+
+Offset | Length | Information
+------ | ------ | -----------
+0x00 | 4 | length of name = len_name
+0x04 | len_name | name
+0x04+len_name | 4 | always 0x05
 
 Continued with resetted offset:
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | always 0x05
-0x04   | 4      | length of message = len_message
-0x08   | len_message | message
-
-## Oddity
-
-I found a message where the message was followed by 0x10, 0x43, 0x12 (four bytes each) and then again message length and message. Block size was correct.
+0x00   | 4      | length of message = len_message
+0x04   | len_message | message
 
 ## Files
 
-Files have an URL starting with https://files.icq.net/get/ as the message.
+Files have an URL starting with https://files.icq.net/get/ as the message. If the file is outgoing, it has a second GUID as described above, and the message is followed by the four-byte integers 0x10, 0x43, 0x12 and then again message length and message.
 
-## Added contacts
+## Added/removed contacts
 
-For this, the message is always "added you to contacts" or similar in the language ICQ is configured with - even if the user himself added the remote peer as contact! However, the direction indicators as above work. After the message, there are some special fields:
+For this, the message is always "added you to contacts" or similar in the language ICQ is configured with - even if the user himself added the remote peer as contact or the contact was removed! However, the direction indicators as above work. Whether the action was adding or removing the contact can not be determined from the record alone. After the message, there are some special fields:
 
 Offset | Length | Information
 ------ | ------ | -----------
