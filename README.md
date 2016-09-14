@@ -91,7 +91,7 @@ Continued with resetted offset:
 
 Offset | Length | Information
 ------ | ------ | -----------
-0x00   | 4      | 0x05 or 0x0e
+0x00   | 4      | always 0x05
 0x04   | 4      | length of message = len_message
 0x08   | len_message | message
 
